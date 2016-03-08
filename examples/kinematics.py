@@ -33,9 +33,9 @@ def main():
         dt = t - times[ii-1]
 
         if t <= 50:
-            Thrust = 2000.0
-            print(Thrust)
-        else: Thrust = 0.0
+            thrust = 2000.0
+            print(thrust)
+        else: thrust = 0.0
 
         angles[ii, :] = angles[ii-1, :]
         posits[ii, :] = posits[ii-1, :]
@@ -73,7 +73,7 @@ def main():
         angles[ii, :] += 0.5*(rot0 + rot)*dt
 
         ## Forces integration ------------------------------------------
-        forces = np.array([2.0, 0.0, Thrust])  # Nm = kg m / s^2
+        forces = np.array([2.0, 0.0, thrust])  # Nm = kg m / s^2
         #pdb.set_trace()
         vdotbody = forces/timestepmass
 
