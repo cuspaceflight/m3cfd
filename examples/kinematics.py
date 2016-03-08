@@ -17,12 +17,12 @@ def main():
     # Roll is defined as the rotation around the z' axis
 
     # To begin with model rocket as a cylinder
-    Initial_Mass = 100
-    Radius = 0.3
-    Height = 2
+    initial_mass = 100
+    radius = 0.3
+    height = 2
     gravityacc = 9.81 # m/s^2
 
-    t, mass = 10, Initial_Mass
+    t, mass = 10, initial_mass
     vel = np.zeros(3) # start at the origin with zero velocity
     rot = np.zeros(3)
 
@@ -49,9 +49,9 @@ def main():
         timestepmass = 0.5*(mass + mass0)
 
         # Moments of inertia from geometry + engine mass
-        Ixx = (timestepmass/12.0)*(3*Radius**2 + Height**2)
-        Iyy = (timestepmass/12.0)*(3*Radius**2 + Height**2)
-        Izz = timestepmass*Radius**2 / 2.0
+        Ixx = (timestepmass/12.0)*(3*radius**2 + height**2)
+        Iyy = (timestepmass/12.0)*(3*radius**2 + height**2)
+        Izz = timestepmass*radius**2 / 2.0
         MoI = np.array([Ixx, Iyy, Izz])
 
         # Forces and moments from CFD solution - in body coordinates
