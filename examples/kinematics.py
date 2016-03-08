@@ -27,63 +27,65 @@ def main():
     rot = np.zeros(3)
 
     for ii, t in enumerate(times):
-        if ii > 0:
-            dt = t - times[ii-1]
+        if ii <= 0:
+            continue
 
-            if t <= 50:
-                Thrust = 2000.0
-                print(Thrust)
-            else: Thrust = 0.0
+        dt = t - times[ii-1]
 
-            angles[ii, :] = angles[ii-1, :]
-            posits[ii, :] = posits[ii-1, :]
+        if t <= 50:
+            Thrust = 2000.0
+            print(Thrust)
+        else: Thrust = 0.0
 
-            ## Mass integration ------------------------------------------
+        angles[ii, :] = angles[ii-1, :]
+        posits[ii, :] = posits[ii-1, :]
 
-            mdot = 0.1 # kg / s
+        ## Mass integration ------------------------------------------
 
-            mass0 = mass*1
-            mass -= mdot
-            timestepmass = 0.5*(mass + mass0)
+        mdot = 0.1 # kg / s
 
-            # Moments of inertia from geometry + engine mass
-            Ixx = (timestepmass/12.0)*(3*Radius**2 + Height**2)
-            Iyy = (timestepmass/12.0)*(3*Radius**2 + Height**2)
-            Izz = timestepmass*Radius**2 / 2.0
-            MoI = np.array([Ixx, Iyy, Izz])
+        mass0 = mass*1
+        mass -= mdot
+        timestepmass = 0.5*(mass + mass0)
 
-            # Forces and moments from CFD solution - in body coordinates
-            moments = np.array([0.0, 0.0, 0.0])  # Nm = kg m^2 / s^2
-            rotdotbody = moments/MoI
+        # Moments of inertia from geometry + engine mass
+        Ixx = (timestepmass/12.0)*(3*Radius**2 + Height**2)
+        Iyy = (timestepmass/12.0)*(3*Radius**2 + Height**2)
+        Izz = timestepmass*Radius**2 / 2.0
+        MoI = np.array([Ixx, Iyy, Izz])
 
-            theta = angles[ii, 0]
-            rotmat = np.array([[np.cos(theta), 0, np.sin(theta)],
-                               [0, 1, 0],
-                               [-1*np.sin(theta), 0, np.cos(theta)]])
+        # Forces and moments from CFD solution - in body coordinates
+        moments = np.array([0.0, 0.0, 0.0])  # Nm = kg m^2 / s^2
+        rotdotbody = moments/MoI
 
-            rotdotglobal = np.dot(rotmat, rotdotbody)
+        theta = angles[ii, 0]
+        rotmat = np.array([[np.cos(theta), 0, np.sin(theta)],
+                           [0, 1, 0],
+                           [-1*np.sin(theta), 0, np.cos(theta)]])
 
-            ## Moments integration ------------------------------------------
+        rotdotglobal = np.dot(rotmat, rotdotbody)
 
-            # Rotation integration from angular acceleration
-            rot0 = rot*1
-            rot += rotdotglobal*dt
-            angles[ii, :] += 0.5*(rot0 + rot)*dt
+        ## Moments integration ------------------------------------------
 
-            ## Forces integration ------------------------------------------
-            forces = np.array([2.0, 0.0, Thrust])  # Nm = kg m / s^2
-            #pdb.set_trace()
-            vdotbody = forces/timestepmass
+        # Rotation integration from angular acceleration
+        rot0 = rot*1
+        rot += rotdotglobal*dt
+        angles[ii, :] += 0.5*(rot0 + rot)*dt
 
-            vdotglobal = np.dot(rotmat, vdotbody)
-            vdotglobal[-1] += -gravityacc
+        ## Forces integration ------------------------------------------
+        forces = np.array([2.0, 0.0, Thrust])  # Nm = kg m / s^2
+        #pdb.set_trace()
+        vdotbody = forces/timestepmass
 
-            # Convert forces from body to global
+        vdotglobal = np.dot(rotmat, vdotbody)
+        vdotglobal[-1] += -gravityacc
 
-            # Velocity integration from acceleration
-            vel0 = vel*1 # *1 to avoid copying variable reference
-            vel += vdotglobal*dt
-            posits[ii, :] += 0.5*(vel + vel0)*dt
+        # Convert forces from body to global
+
+        # Velocity integration from acceleration
+        vel0 = vel*1 # *1 to avoid copying variable reference
+        vel += vdotglobal*dt
+        posits[ii, :] += 0.5*(vel + vel0)*dt
 
     plt.figure()
     plt.scatter(times[:], posits[:, 0])
