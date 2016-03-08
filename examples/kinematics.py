@@ -2,8 +2,6 @@ from __future__ import print_function
 
 import numpy as np
 import matplotlib.pyplot as plt
-import math
-import pdb
 
 dt = 1
 duration = 100
