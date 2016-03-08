@@ -7,10 +7,10 @@ dt = 1
 duration = 100
 
 times = np.linspace(0, duration, num=duration/dt+1)
-posits = np.zeros([times.shape[0], 3], float) # x,y,z - 3 DoF postion
+posits = np.zeros([times.shape[0], 3]) # x,y,z - 3 DoF postion
 # x,y,z are the position of the rocket in global coordinates
 # x',y',z' are the body fixed coordinates of the rocket
-angles = np.zeros([times.shape[0], 3], float) # theta, psi, roll  - 3 DoF rotation
+angles = np.zeros([times.shape[0], 3]) # theta, psi, roll  - 3 DoF rotation
 # Theta is defined as the angle down from the vertical (z) axis - the angle between z and z'
 # Psi is defined as the rotation around the vertical (z) axis
 # Roll is defined as the rotation around the z' axis
@@ -22,8 +22,8 @@ Height = 2
 gravityacc = 9.81 # m/s^2
 
 t, mass = 10, Initial_Mass
-vel = np.zeros(3, float) # start at the origin with zero velocity
-rot = np.zeros(3, float)
+vel = np.zeros(3) # start at the origin with zero velocity
+rot = np.zeros(3)
 
 for ii, t in enumerate(times):
     if ii > 0:
