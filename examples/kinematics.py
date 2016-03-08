@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 import numpy as np
 import matplotlib.pyplot as plt
 import math
@@ -31,7 +33,7 @@ for ii, t in enumerate(times):
 
         if t <= 50:
             Thrust = 2000.0
-            print Thrust
+            print(Thrust)
         else: Thrust = 0.0
 
         angles[ii,:] = angles[ii-1,:]
